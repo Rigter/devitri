@@ -1,0 +1,31 @@
+{
+  "name": "devitri-obsidian-plugin",
+  "version": "1.0.0",
+  "description": "Devitri sync client for Obsidian",
+  "main": "main.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs && cp manifest.json dist/manifest.json",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [
+    "obsidian",
+    "sync",
+    "devitri"
+  ],
+  "author": "Rigter <https://rigter.me>",
+  "license": "MIT",
+  "homepage": "https://github.com/rigter/devitri",
+  "bugs": {
+    "url": "https://github.com/rigter/devitri/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rigter/devitri.git",
+    "directory": "plugin-obsidian"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "obsidian": "^1.7.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "devitri-obsidian-plugin",
+  "name": "Devitri",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "author": "Rigter",
+  "authorUrl": "https://rigter.me",
+  "description": "Bidirectional sync with Devitri server for Obsidian",
+  "main": "main.js"
+}
