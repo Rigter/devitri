@@ -2,7 +2,7 @@
 FROM node:22-slim AS builder
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@11.5.0 --activate
 
 # Set working directory
 WORKDIR /app
