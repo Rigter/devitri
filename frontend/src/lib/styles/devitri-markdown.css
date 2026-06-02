@@ -1,0 +1,254 @@
+/* Obsidian-style markdown preview (dashboard) */
+
+.devitri-md {
+  font-family: var(--font-body, 'IBM Plex Mono', monospace);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text);
+  word-wrap: break-word;
+}
+
+.devitri-md h1,
+.devitri-md h2,
+.devitri-md h3,
+.devitri-md h4,
+.devitri-md h5,
+.devitri-md h6 {
+  font-family: var(--font-heading, 'Archivo', sans-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+.devitri-md h1 { font-size: 1.75rem; }
+.devitri-md h2 { font-size: 1.35rem; border-bottom: 1px solid var(--border); padding-bottom: 0.25em; }
+.devitri-md h3 { font-size: 1.1rem; }
+
+.devitri-md p {
+  margin: 0.75em 0;
+}
+
+.devitri-md a.devitri-link {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.devitri-md a.devitri-link:hover {
+  opacity: 0.85;
+}
+
+.devitri-md .devitri-wiki-link {
+  color: var(--text);
+  background: color-mix(in srgb, var(--muted) 25%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 0.25em;
+  cursor: default;
+  border-bottom: 1px dashed var(--border);
+}
+
+.devitri-md .devitri-tag {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.devitri-md mark.devitri-highlight {
+  background: color-mix(in srgb, var(--color-success) 35%, transparent);
+  color: var(--text);
+  padding: 0.05em 0.2em;
+  border-radius: 0.15em;
+}
+
+.devitri-md del.devitri-strike {
+  opacity: 0.65;
+}
+
+.devitri-md .devitri-inline-code,
+.devitri-md .devitri-code-block code {
+  font-family: var(--font-body, 'IBM Plex Mono', monospace);
+}
+
+.devitri-md .devitri-inline-code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.1em 0.35em;
+  border-radius: 0.25em;
+  font-size: 0.88em;
+}
+
+.devitri-md .devitri-code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.devitri-md .devitri-code-block__label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.devitri-md .devitri-code-block code {
+  display: block;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.devitri-md .devitri-md-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  margin: 1em 0;
+}
+
+.devitri-md .devitri-callout {
+  border-left: 3px solid var(--border);
+  background: var(--surface);
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1em 0;
+  padding: 0.75rem 1rem;
+}
+
+.devitri-md .devitri-callout__title {
+  font-family: var(--font-heading, 'Archivo', sans-serif);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.devitri-md .devitri-callout__body p {
+  margin: 0.35em 0;
+}
+
+.devitri-md .devitri-callout--note,
+.devitri-md .devitri-callout--info { border-left-color: #60a5fa; }
+.devitri-md .devitri-callout--tip,
+.devitri-md .devitri-callout--hint { border-left-color: var(--color-success); }
+.devitri-md .devitri-callout--warning,
+.devitri-md .devitri-callout--caution { border-left-color: #fbbf24; }
+.devitri-md .devitri-callout--danger,
+.devitri-md .devitri-callout--error,
+.devitri-md .devitri-callout--failure { border-left-color: var(--color-conflict); }
+
+.devitri-md .devitri-blockquote {
+  border-left: 3px solid var(--border);
+  margin: 1em 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: var(--muted);
+}
+
+.devitri-md .devitri-list,
+.devitri-md .devitri-task-list {
+  margin: 0.75em 0;
+  padding-left: 1.5rem;
+}
+
+.devitri-md .devitri-task-list {
+  list-style: none;
+  padding-left: 0.25rem;
+}
+
+.devitri-md .devitri-task {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.35em 0;
+  list-style: none;
+}
+
+.devitri-md .devitri-task__box {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.2rem;
+  font-size: 0.65rem;
+  margin-top: 0.2em;
+}
+
+.devitri-md .devitri-task--done {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+.devitri-md .devitri-table-wrap {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.devitri-md .devitri-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.devitri-md .devitri-table th,
+.devitri-md .devitri-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.devitri-md .devitri-table th {
+  background: var(--surface);
+  font-weight: 700;
+}
+
+.devitri-md .devitri-hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+
+.devitri-md .devitri-math {
+  font-family: var(--font-body, monospace);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+}
+
+.devitri-md .devitri-math--inline {
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+
+.devitri-md .devitri-math--block {
+  display: block;
+  margin: 1em 0;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+}
+
+.devitri-md .devitri-footnote-ref a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.75em;
+}
+
+.devitri-md .devitri-footnotes {
+  margin-top: 2em;
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+.devitri-md .devitri-block-ref {
+  color: var(--muted);
+  font-size: 0.8em;
+  vertical-align: super;
+}

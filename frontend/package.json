@@ -1,0 +1,65 @@
+{
+  "name": "devitri-frontend",
+  "author": "Rigter <https://rigter.me>",
+  "license": "MIT",
+  "keywords": [
+    "devitri",
+    "dashboard",
+    "obsidian",
+    "self-hosted",
+    "sync",
+    "docker",
+    "cloud-sync"
+  ],
+  "homepage": "https://github.com/rigter/devitri",
+  "bugs": {
+    "url": "https://github.com/rigter/devitri/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rigter/devitri.git",
+    "directory": "frontend"
+  },
+  "contributors": [
+    {
+      "name": "Rigter",
+      "url": "https://rigter.me"
+    }
+  ],
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "svelte-kit sync && vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.21.0",
+    "svelte": "^5.30.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.4",
+    "@types/node": "^22.0.0",
+    "autoprefixer": "^10.4.20",
+    "bits-ui": "^0.21.0",
+    "clsx": "^2.1.1",
+    "eslint": "^9.0.0",
+    "eslint-plugin-svelte": "^3.9.0",
+    "lucide-svelte": "^0.473.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "svelte-check": "^4.0.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.0.0",
+    "vite": "^5.4.11"
+  }
+}

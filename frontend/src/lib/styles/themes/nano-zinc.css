@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Nano v1 (Zinc) Theme - Achromatic Palette */
+
+:root {
+  /* Dark theme (Default) */
+  --bg: #18181B;
+  --surface: #27272A;
+  --border: #3F3F46;
+  --text: #F4F4F5;
+  --muted: #A1A1AA;
+  --color-conflict: #F87171;
+  --color-success: #34D399;
+  
+  /* Font family roles */
+  --nano-font-heading-display: 'IBM Plex Sans', sans-serif;
+  --nano-font-heading: 'Archivo', sans-serif;
+  --nano-font-body: 'IBM Plex Mono', monospace;
+  --nano-font-logo-n: 'IBM Plex Sans', sans-serif;
+  --nano-font-logo-ext: 'Archivo Black', sans-serif;
+
+  /* Font Aliases for Tailwind */
+  --font-heading: var(--nano-font-heading);
+  --font-body: var(--nano-font-body);
+  
+  /* Radix / Shadcn compatible spacing & radius */
+  --radius: 0.5rem;
+}
+
+.light {
+  --bg: #F4F4F5;
+  --surface: #E4E4E7;
+  --border: #D4D4D8;
+  --text: #18181B;
+  --muted: #71717A;
+  --color-conflict: #EF4444;
+  --color-success: #10B981;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+  }
+}
+
+/* Utilities for cards and buttons (shadcn style) */
+@layer components {
+  .btn-ghost {
+    @apply hover:bg-muted hover:text-foreground px-3 py-2 rounded-md transition-colors;
+  }
+}
