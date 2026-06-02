@@ -1,0 +1,41 @@
+# Secrets and local environment
+.env
+.env.local
+.env.*.local
+!.env.example
+!frontend/.env.example
+backend/test.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Runtime data
+/data/
+/vaults/
+*.db
+*.sqlite
+*.sqlite3
+
+# TLS / proxy secrets (Let's Encrypt, local certs)
+**/acme.json
+*.pem
+*.key
+
+# Dependencies and build artifacts
+node_modules/
+.pnpm-store/
+frontend/build/
+frontend/.svelte-kit/
+plugin-obsidian/main.js
+plugin-obsidian/main.js.map
+plugin-obsidian/dist/
+plugin-obsidian/node_modules/
+
+# OS and editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Go
+backend/devitri
+backend/*.test

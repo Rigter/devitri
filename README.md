@@ -1,0 +1,146 @@
+# Devitri
+
+*Pronunciation:* **DEH-vih-tree** · `/ˈdɛvɪtri/` (from *devitrification*)
+
+[![CI](https://github.com/rigter/devitri/actions/workflows/ci.yml/badge.svg)](https://github.com/rigter/devitri/actions/workflows/ci.yml)
+
+**Bidirectional sync and self-hosted web dashboard for Obsidian vaults.**
+
+Devitri keeps your notes synchronized across devices using content hashes (SHA-256) and three-way merge, while giving you a minimal web UI to browse vaults and manage device access. You run the stack; your data stays on your infrastructure.
+
+> Architecture and API contract: [`FOUNDATION.md`](./FOUNDATION.md) · UI: [`DESIGN.md`](./DESIGN.md) · Contributors: [`AGENTS.md`](./AGENTS.md)
+
+## Features
+
+- **3-way sync** — local, remote, and last-synced base; automatic Markdown merge when edits do not overlap
+- **Conflict copies** — safe filenames when merge is not possible (`Devitri Conflict - device - timestamp`)
+- **Bulk-delete protection** — blocks large deletion batches until explicitly confirmed
+- **Obsidian plugin** — desktop and mobile via `requestUrl` (no browser CORS issues)
+- **Web dashboard** — static SvelteKit app (Miller columns, markdown preview, device tokens)
+- **First-run setup** — generates bcrypt hash and JWT secret; secrets are never written to disk by the server
+- **Security defaults** — JWT sessions, rate-limited login, path validation, upload size limits, security headers
+
+## Repository layout
+
+```
+devitri/
+├── backend/           # Go API + sync engine + SQLite
+├── frontend/          # SvelteKit static dashboard
+├── plugin-obsidian/   # Obsidian community plugin (TypeScript)
+├── deploy/            # Docker Compose (dev, Traefik, Caddy)
+├── FOUNDATION.md      # Product & API specification (source of truth)
+├── DESIGN.md          # Design system (Nano v1 / Zinc)
+└── AGENTS.md          # Contributor / agent context
+```
+
+## Deployment models
+
+| Model | API | Dashboard | CORS | Typical use |
+|-------|-----|-----------|------|-------------|
+| **A — API only (public)** | HTTPS on VPS | Local (`npm run dev` / preview) | List localhost origins + set `VITE_DEVITRI_BACKEND_URL` | Personal server, max privacy for UI |
+| **B — API + dashboard (public)** | HTTPS | HTTPS (same or other domain) | `DEVITRI_CORS_ORIGINS` = dashboard URL(s) | Family team, browser access anywhere |
+| **C — Local Docker** | `localhost:8080` | `localhost:3000` | Defaults in dev compose | Hacking, integration tests |
+
+**Obsidian plugin:** always talks to your API URL with `Authorization: Bearer`. It does **not** use browser CORS; use **HTTPS** for any internet-exposed API.
+
+See [`.env.example`](./.env.example) for copy-paste `DEVITRI_CORS_ORIGINS` values per profile.
+
+## Quick start (Docker, local)
+
+```bash
+git clone https://github.com/rigter/devitri.git
+cd devitri
+cp .env.example .env
+# Complete first-run: start stack, open setup UI, paste generated secrets into .env, restart
+
+docker compose -f deploy/dev/docker-compose.yml up -d --build
+```
+
+- API: http://localhost:8080  
+- Dashboard (container): http://localhost:3000  
+- Health: http://localhost:8080/health  
+
+First-run: until `DEVITRI_MASTER_HASH` and `DEVITRI_JWT_SECRET` are set, only `/api/setup/*` is available. Use the dashboard **Setup** flow or the setup API to generate values, then restart the backend.
+
+## Development
+
+### Backend
+
+```bash
+cd backend
+go test ./...
+go run ./cmd/devitri
+```
+
+Listens on `:8080` by default. SQLite under `./data`, vault files under `./vaults` (or paths configured in Docker).
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+cp .env.example .env.local   # optional: VITE_DEVITRI_BACKEND_URL for remote API
+npm run dev                    # http://localhost:5173
+npm run check && npm run build
+```
+
+### Obsidian plugin
+
+```bash
+cd plugin-obsidian
+npm install
+npm run build
+```
+
+Copy `main.js` and `manifest.json` into your vault’s `.obsidian/plugins/devitri-obsidian-plugin/` (folder name must match `manifest.json` `id`). Details: [`plugin-obsidian/README.md`](./plugin-obsidian/README.md).
+
+## Configuration
+
+| File | Purpose |
+|------|---------|
+| [`.env.example`](./.env.example) | Backend secrets, CORS, sync thresholds, proxy trust |
+| [`frontend/.env.example`](./frontend/.env.example) | `VITE_DEVITRI_BACKEND_URL` when API is remote |
+
+Important variables:
+
+- **`DEVITRI_MASTER_HASH`** / **`DEVITRI_JWT_SECRET`** — required after setup  
+- **`DEVITRI_CORS_ORIGINS`** — browser dashboard origins (comma-separated)  
+- **`DEVITRI_TRUST_PROXY_HEADERS`** — `true` only behind your reverse proxy  
+- **`DEVITRI_ALLOW_INSECURE_JWT`** — local dev only; never in production  
+
+Production API **must** be served over **HTTPS**. That is the operator’s responsibility (Traefik, Caddy, etc. under `deploy/`).
+
+## Production compose
+
+```bash
+# Traefik (existing VPS) — default symlink at repo root
+docker compose up -d
+
+# Caddy greenfield install
+docker compose -f deploy/caddy/docker-compose.yml up -d
+```
+
+Adjust volumes, domains, and TLS in the compose files under `deploy/`.
+
+## Security
+
+- All `/api/*` routes require `Authorization: Bearer <token>` except `/api/auth/login` and `/api/setup/*` (setup only before configured).
+- Dashboard tokens are stored in `localStorage` when using the web UI; prefer profile **A** if you do not want a public dashboard attack surface.
+- Revoke device tokens from **Devices** in the dashboard.
+- Report vulnerabilities: see [`SECURITY.md`](./SECURITY.md).
+
+## Testing
+
+Local verification (Docker, split dev, plugin, sync): [`TESTING.md`](./TESTING.md).
+
+## Contributing
+
+We welcome issues and pull requests. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`AGENTS.md`](./AGENTS.md) before larger changes. API JSON shapes in `FOUNDATION.md` are contractual—update them together with `backend`, `frontend`, and `plugin-obsidian` clients.
+
+## Author
+
+**Rigter** — [rigter.me](https://rigter.me) · [GitHub](https://github.com/rigter)
+
+## License
+
+MIT — see [`LICENSE`](./LICENSE). Copyright (c) 2026 [Rigter](https://rigter.me).
