@@ -12,10 +12,6 @@ node_modules/
 .env.test
 .env.production
 
-# TypeScript artifacts
-tsconfig.json
-jsconfig.json
-
 # Build output
 dist/
 out/
