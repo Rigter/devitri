@@ -16,6 +16,10 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
+# Public API URL baked into the static build (set via compose build.args / .env)
+ARG VITE_DEVITRI_BACKEND_URL=
+ENV VITE_DEVITRI_BACKEND_URL=${VITE_DEVITRI_BACKEND_URL}
+
 # Build the SvelteKit app
 RUN pnpm run build
 
