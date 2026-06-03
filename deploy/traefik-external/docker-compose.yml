@@ -8,8 +8,13 @@
 #   DEVITRI_API_HOST=api.example.com
 #   DEVITRI_WEB_HOST=devitri.example.com
 #
+# Same hostname for API + dashboard (e.g. devitri.example.com): set BOTH hosts to that
+# name. Traefik routes PathPrefix /api and /health to the backend (priority 100); the
+# rest goes to the frontend. Without PathPrefix, POST /api/setup/generate hits Caddy → 405.
+#
 # Required for frontend build (full public API URL, with https://):
 #   DEVITRI_BACKEND_URL=https://api.example.com
+#   (same-host: https://devitri.example.com)
 #
 # CORS (browser dashboard): include the dashboard origin, e.g.
 #   DEVITRI_CORS_ORIGINS=https://devitri.example.com
@@ -35,7 +40,8 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=${DEVITRI_TRAEFIK_NETWORK:-traefik}
-      - traefik.http.routers.devitri-api.rule=Host(`${DEVITRI_API_HOST:?set DEVITRI_API_HOST in .env}`)
+      - traefik.http.routers.devitri-api.rule=Host(`${DEVITRI_API_HOST:?set DEVITRI_API_HOST in .env}`) && (PathPrefix(`/api`) || Path(`/health`))
+      - traefik.http.routers.devitri-api.priority=100
       - traefik.http.routers.devitri-api.entrypoints=${DEVITRI_TRAEFIK_ENTRYPOINT:-websecure}
       - traefik.http.routers.devitri-api.tls.certresolver=${DEVITRI_TRAEFIK_CERT_RESOLVER:-letsencrypt}
       - traefik.http.services.devitri-api.loadbalancer.server.port=8080
@@ -59,6 +65,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=${DEVITRI_TRAEFIK_NETWORK:-traefik}
       - traefik.http.routers.devitri-web.rule=Host(`${DEVITRI_WEB_HOST:?set DEVITRI_WEB_HOST in .env}`)
+      - traefik.http.routers.devitri-web.priority=1
       - traefik.http.routers.devitri-web.entrypoints=${DEVITRI_TRAEFIK_ENTRYPOINT:-websecure}
       - traefik.http.routers.devitri-web.tls.certresolver=${DEVITRI_TRAEFIK_CERT_RESOLVER:-letsencrypt}
       - traefik.http.services.devitri-web.loadbalancer.server.port=80

@@ -20,6 +20,22 @@ docker compose -f deploy/traefik-external/docker-compose.yml build --no-cache ba
 docker compose -f deploy/traefik-external/docker-compose.yml up -d backend
 ```
 
+## 405 on `/api/setup/generate`
+
+The backend only accepts **POST**. A **405** on setup usually means Traefik sent the request to the **frontend** (static Caddy), not the Go API.
+
+**Same hostname for UI and API** (e.g. `devitri.rigter.space`): the backend router must include `PathPrefix(\`/api\`)` and a higher **priority** than the frontend router. See labels in `docker-compose.yml`.
+
+**Quick check:**
+
+```bash
+curl -sS -X POST https://devitri.example.com/api/setup/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"password":"testpassword12"}'
+```
+
+Expect JSON with `hash` and `jwt_secret`, not HTML or 405.
+
 ## Database error on first start
 
 If logs show `unable to open database file` on `/data`:
