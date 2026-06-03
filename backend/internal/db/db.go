@@ -12,18 +12,31 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func resolveDataDir() string {
+	if v := os.Getenv("DEVITRI_DATA_DIR"); v != "" {
+		return v
+	}
+	if _, err := os.Stat("/data"); err == nil {
+		return "/data"
+	}
+	return "./data"
+}
+
 // InitDB initializes the SQLite database
 func InitDB() (*sql.DB, error) {
-	dataDir := "/data"
-	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
-		dataDir = "./data"
-	}
+	dataDir := resolveDataDir()
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create data directory: %w", err)
+		return nil, fmt.Errorf("failed to create data directory %q: %w", dataDir, err)
 	}
 
-	// Database file path
-	dbPath := filepath.Join(dataDir, "devitri.db")
+	if err := checkDirWritable(dataDir); err != nil {
+		return nil, err
+	}
+
+	dbPath, err := filepath.Abs(filepath.Join(dataDir, "devitri.db"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve database path: %w", err)
+	}
 
 	// Open database connection
 	db, err := sql.Open("sqlite3", dbPath)
@@ -47,6 +60,17 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func checkDirWritable(dir string) error {
+	probe := filepath.Join(dir, ".write-test")
+	if err := os.WriteFile(probe, []byte("ok"), 0644); err != nil {
+		return fmt.Errorf(
+			"data directory %q is not writable (uid=%d gid=%d): %w — in Docker, rebuild the backend image so the entrypoint can chown mounted volumes, or run: docker compose exec -u root backend chown -R devitri:devitri %s",
+			dir, os.Getuid(), os.Getgid(), err, dir,
+		)
+	}
+	return os.Remove(probe)
 }
 
 // runMigrations executes all database migrations

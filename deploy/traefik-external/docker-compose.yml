@@ -29,6 +29,7 @@ services:
     volumes:
       - devitri-data:/data
       - devitri-vaults:/vaults
+    # Do not set `user:` here — the image entrypoint must run as root once to chown volumes.
     networks:
       - traefik-proxy
     labels:
