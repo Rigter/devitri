@@ -14,14 +14,12 @@ import (
 
 // InitDB initializes the SQLite database
 func InitDB() (*sql.DB, error) {
-	// Create data directory if it doesn't exist
 	dataDir := "/data"
 	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
-		// For development, use a local directory
 		dataDir = "./data"
-		if err := os.MkdirAll(dataDir, 0755); err != nil {
-			return nil, fmt.Errorf("failed to create data directory: %w", err)
-		}
+	}
+	if err := os.MkdirAll(dataDir, 0755); err != nil {
+		return nil, fmt.Errorf("failed to create data directory: %w", err)
 	}
 
 	// Database file path
