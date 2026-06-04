@@ -14,12 +14,22 @@
   }
 
   let { children }: Props = $props();
-  let darkMode = $state(true);
+  // Initialize darkMode from localStorage or system preference
+  let darkMode = $state(() => {
+    const savedTheme = localStorage.getItem('devitri-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme === 'dark';
+    }
+    // Fallback to system preference
+    return !window.matchMedia('(prefers-color-scheme: light)').matches;
+  });
 
   function toggleTheme(): void {
     darkMode = !darkMode;
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('light', !darkMode);
+      // Save preference to localStorage
+      localStorage.setItem('devitri-theme', darkMode ? 'dark' : 'light');
     }
   }
 
@@ -42,9 +52,20 @@
   onMount(() => {
     void refreshServerStatus();
     void initAuth();
-    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-    darkMode = !prefersLight;
-    document.documentElement.classList.toggle('light', !darkMode);
+    
+    // Read theme preference from localStorage or use system preference
+    const savedTheme = localStorage.getItem('devitri-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      darkMode = savedTheme === 'dark';
+    } else {
+      // Use system preference as fallback
+      darkMode = !window.matchMedia('(prefers-color-scheme: light)').matches;
+    }
+    
+    // Apply theme class to document
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('light', !darkMode);
+    }
   });
 </script>
 
