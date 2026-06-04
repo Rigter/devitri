@@ -15,13 +15,22 @@
 
   let { children }: Props = $props();
   // Initialize darkMode from localStorage or system preference
-  let darkMode = $state(() => {
+  let darkMode = $state(false);
+  
+  // Set initial theme based on saved preference or system preference
+  onMount(() => {
     const savedTheme = localStorage.getItem('devitri-theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
-      return savedTheme === 'dark';
+      darkMode = savedTheme === 'dark';
+    } else {
+      // Use system preference as fallback
+      darkMode = !window.matchMedia('(prefers-color-scheme: light)').matches;
     }
-    // Fallback to system preference
-    return !window.matchMedia('(prefers-color-scheme: light)').matches;
+    
+    // Apply theme class to document
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('light', !darkMode);
+    }
   });
 
   function toggleTheme(): void {
