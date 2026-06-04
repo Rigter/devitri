@@ -133,6 +133,35 @@ Adjust volumes, domains, and TLS in the compose files under `deploy/`.
 
 Local verification (Docker, split dev, plugin, sync): [`TESTING.md`](./TESTING.md).
 
+## FAQ
+
+### Only new notes sync after I change the server URL (local → VPS)
+
+The Obsidian plugin keeps a **local sync base** (`manifestB`) in plugin data. After the first cycles it runs **incremental** sync: it re-scans paths you create, edit, delete, or rename—not necessarily every file in the vault on every run.
+
+If you previously synced against **another server** (for example local Docker on `localhost:8080`) and then point **Server URL** at a **new remote** VPS with an **empty** vault:
+
+- The plugin may still believe older notes are already synchronized (base manifest from the old server).
+- Only files marked **dirty** since that change (typically **new** notes) are picked up and uploaded.
+- The remote API can show `files: []` while your laptop still has a full vault.
+
+**Fix:** In Obsidian → Settings → Devitri → **Reset Local Sync State**, then **Sync Now**. That clears the local base and performs a full Markdown scan toward the current server. Confirm on the server:
+
+```bash
+curl -sS -H "Authorization: Bearer TOKEN" https://your-api.example.com/api/vaults/YOUR_VAULT/sync/manifest
+ls -la /vaults/YOUR_VAULT/   # inside the backend container or host mount
+```
+
+Use the same **Vault ID** and a fresh **access key** from the dashboard **Connect** page for the server you are on now.
+
+### What file types sync?
+
+The plugin syncs **Markdown** notes (`.md` via Obsidian’s markdown file list). Paths under `.obsidian/` are excluded. Attachments and other extensions are not synced in the current release.
+
+### Server manifest is empty but the dashboard lists my vault
+
+The vault row can exist after the first API contact while **no files** have been uploaded yet. See the local → remote case above, or check the plugin developer console after **Sync Now** for errors (401, bulk-delete blocked, upload failures).
+
 ## Contributing
 
 We welcome issues and pull requests. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`AGENTS.md`](./AGENTS.md) before larger changes. API JSON shapes in `FOUNDATION.md` are contractual—update them together with `backend`, `frontend`, and `plugin-obsidian` clients.
