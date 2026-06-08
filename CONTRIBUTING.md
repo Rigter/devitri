@@ -1,6 +1,6 @@
 # Contributing to Devitri
 
-Thank you for considering a contribution. Devitri is a monorepo with three independent packages that communicate only over HTTP.
+Thank you for considering a contribution. This monorepo contains the backend and frontend; the [Obsidian plugin](https://github.com/rigter/devitri-obsidian-plugin) lives in a separate repository. All packages communicate only over HTTP.
 
 ## Before you start
 
@@ -12,15 +12,16 @@ Thank you for considering a contribution. Devitri is a monorepo with three indep
 
 ## Development checks
 
-Match what CI runs (see [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)):
+Match what CI runs in this repo (see [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)):
 
 ```bash
 cd backend && go test ./...
 cd frontend && pnpm install && pnpm exec svelte-kit sync && pnpm run check && pnpm run build
-cd plugin-obsidian && npm ci && npm run check && npm run build
 ```
 
-Pull requests should pass all three jobs before merge.
+Plugin changes: open PRs in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin) and follow its contributing guide.
+
+Pull requests to this repo should pass both CI jobs before merge.
 
 Before your first commit (or when changing `.gitignore`), run:
 
@@ -32,7 +33,7 @@ Before your first commit (or when changing `.gitignore`), run:
 
 - Keep changes focused; one concern per PR when possible.
 - Do not edit applied SQLite migrations; add a new numbered file instead.
-- If you change API JSON fields or endpoints, update `FOUNDATION.md` and all clients (`frontend/src/lib/api/client.ts`, `plugin-obsidian/src/sync/api.ts`).
+- If you change API JSON fields or endpoints, update `FOUNDATION.md`, `frontend/src/lib/api/client.ts`, and the plugin client in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages (English).
 - Do not commit `.env`, vault data, or `data/` / `vaults/` contents.
 
@@ -40,7 +41,7 @@ Before your first commit (or when changing `.gitignore`), run:
 
 - **Go:** stdlib-first; `gofmt` / usual Go idioms.
 - **Frontend:** design tokens from `nano-zinc.css` only—no hardcoded hex in `.svelte` files.
-- **Plugin:** HTTP via Obsidian `requestUrl` only (not raw `fetch`).
+- **Plugin** (other repo): HTTP via Obsidian `requestUrl` only (not raw `fetch`).
 
 ## Questions
 

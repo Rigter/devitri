@@ -1,6 +1,6 @@
 # Devitri — Agent Context
 
-**Devitri** is a bidirectional sync and self-hosted web dashboard for Obsidian. The monorepo contains three independent packages (`backend`, `frontend`, `plugin-obsidian`) that communicate only over HTTP.
+**Devitri** is a bidirectional sync and self-hosted web dashboard for Obsidian. This monorepo contains two packages (`backend`, `frontend`) that communicate with the [Obsidian plugin](https://github.com/rigter/devitri-obsidian-plugin) only over HTTP.
 
 ---
 
@@ -14,7 +14,7 @@
 | [`.env.example`](./.env.example) | Environment variables and deployment profiles |
 | [`docs/tasks/`](./docs/tasks/) | Optional feature specs and implementation notes |
 
-When changing API shapes, update `FOUNDATION.md` and all clients (`frontend/src/lib/api/client.ts`, `plugin-obsidian/src/sync/api.ts`).
+When changing API shapes, update `FOUNDATION.md` and all clients (`frontend/src/lib/api/client.ts`, and the plugin API wrapper in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin)).
 
 ---
 
@@ -24,7 +24,7 @@ When changing API shapes, update `FOUNDATION.md` and all clients (`frontend/src/
 |-------|------|
 | Backend | Go 1.24+, SQLite (in `/data`), JWT `HS256`, Bcrypt cost 14 |
 | Frontend | SvelteKit (SSG), CSS tokens only |
-| Obsidian plugin | TypeScript, `requestUrl` (not `fetch`), esbuild |
+| Obsidian plugin | TypeScript, `requestUrl` (not `fetch`), esbuild — [separate repo](https://github.com/rigter/devitri-obsidian-plugin) |
 | Infra | Docker, Traefik or Caddy reverse proxy |
 
 ---
@@ -35,21 +35,22 @@ When changing API shapes, update `FOUNDATION.md` and all clients (`frontend/src/
 devitri/
 ├── backend/              # Go — REST API + sync
 ├── frontend/             # SvelteKit static dashboard
-├── plugin-obsidian/      # Obsidian plugin
 ├── deploy/               # docker-compose variants (dev, traefik, caddy)
 ├── FOUNDATION.md
 ├── DESIGN.md
 └── .env.example
 ```
 
+Obsidian plugin: [github.com/rigter/devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin)
+
 ---
 
 ## Key Conventions
 
-1. **Three independent packages** — no shared runtime code; HTTP REST only.
+1. **Independent packages** — backend and frontend in this repo; plugin in its own repo; HTTP REST only at runtime.
 2. **Migrations** — new numbered file `NNN_description.sql` per schema change; never edit applied migrations.
 3. **CSS tokens** — frontend uses `nano-zinc.css` custom properties only; no hardcoded hex in `.svelte` files.
-4. **Plugin `manifest.json`** — `id` must match the plugin folder name exactly.
+4. **Plugin `manifest.json`** — `id` must match the plugin folder name exactly (`devitri-obsidian-plugin`).
 5. **API auth** — `Authorization: Bearer <TOKEN>` on `/api/*` except `/api/auth/login` and `/api/setup/*` (setup only before configured).
 6. **JSON contract** — field names and types in `FOUNDATION.md` §4 are stable across backend, frontend, and plugin.
 
@@ -85,7 +86,7 @@ Missing `DEVITRI_MASTER_HASH` or `DEVITRI_JWT_SECRET` → first-run mode: `/api/
 ### Before any change
 
 1. Read `FOUNDATION.md` for the affected area.
-2. If API responses change, update frontend client and plugin API wrapper.
+2. If API responses change, update frontend client and the plugin API wrapper in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).
 3. New schema → new migration file only.
 4. Plugin manifest `id` unchanged unless folder is renamed too.
 
@@ -94,13 +95,14 @@ Missing `DEVITRI_MASTER_HASH` or `DEVITRI_JWT_SECRET` → first-run mode: `/api/
 ```bash
 cd backend && go test ./...
 cd frontend && npm run check && npm run build
-cd plugin-obsidian && npm run build
 docker compose -f deploy/dev/docker-compose.yml up -d
 ```
 
+Plugin build: see [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).
+
 ### CI
 
-GitHub Actions: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — backend `go test ./...`, frontend `pnpm run check` + build, plugin `npm run check` + build.
+GitHub Actions: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — backend `go test ./...`, frontend `pnpm run check` + build.
 
 ---
 
@@ -119,4 +121,4 @@ See [`.env.example`](./.env.example) for full list and deployment profiles (API-
 
 ---
 
-*Last updated: 2026-06-02*
+*Last updated: 2026-06-07*

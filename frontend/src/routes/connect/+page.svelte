@@ -201,7 +201,7 @@
 
       <div class="space-y-4 pt-4">
         <ol class="space-y-4 list-decimal list-inside text-sm text-muted-foreground font-sans">
-          <li class="pl-2">Build and copy the plugin to your vault: <code class="bg-muted px-1 rounded text-foreground">{`{vault}/.obsidian/plugins/devitri-obsidian-plugin/`}</code> (see <code class="bg-muted px-1 rounded">plugin-obsidian/INSTALL.md</code>).</li>
+          <li class="pl-2">Build and copy the plugin to your vault: <code class="bg-muted px-1 rounded text-foreground">{`{vault}/.obsidian/plugins/devitri-obsidian-plugin/`}</code> (see <a href="https://github.com/rigter/devitri-obsidian-plugin" class="underline text-foreground hover:text-primary" target="_blank" rel="noopener noreferrer">devitri-obsidian-plugin</a>).</li>
           <li class="pl-2">Open <strong>Obsidian</strong> → <strong>Settings</strong> → <strong>Community Plugins</strong> → enable <strong>Devitri</strong>.</li>
           <li class="pl-2">
             In plugin settings, set <strong>Server URL</strong> to the API base URL:

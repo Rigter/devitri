@@ -428,7 +428,7 @@ Files are identified by **SHA-256** of content.
 - **`manifest.json` `id`** must equal install folder name (`devitri-obsidian-plugin`).
 - Bulk delete: client-side threshold check + server confirmation; **Confirm once** in plugin settings.
 
-See [`plugin-obsidian/README.md`](./plugin-obsidian/README.md).
+See [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).
 
 ---
 
@@ -485,7 +485,6 @@ Security:
 devitri/
 ├── backend/           # Go API + sync + SQLite migrations
 ├── frontend/          # SvelteKit dashboard
-├── plugin-obsidian/   # Obsidian plugin
 ├── deploy/            # Docker variants
 ├── docs/tasks/        # Optional specs (see README there)
 ├── FOUNDATION.md
@@ -494,12 +493,14 @@ devitri/
 └── .env.example
 ```
 
+Obsidian plugin (separate repository): [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin)
+
 ### Conventions
 
-- **Monorepo, three packages** — HTTP only at runtime.
+- **Monorepo (backend + frontend)** — plugin in its own repo; HTTP only at runtime.
 - **Immutable migrations** — `NNN_description.sql`.
 - **CSS tokens only** in Svelte components.
-- **CI** — `go test`, `npm run check`, plugin build (when workflows are present).
+- **CI** — `go test`, frontend `pnpm run check` + build (plugin CI in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin)).
 
 ---
 

@@ -11,7 +11,7 @@ See also: [README.md](./README.md) (overview), [`.env.example`](./.env.example) 
 - Docker and Docker Compose
 - [Go](https://go.dev/) 1.24+ (backend development)
 - [Node.js](https://nodejs.org/) 20+ and [pnpm](https://pnpm.io/) (frontend; lockfile is `pnpm-lock.yaml`)
-- [npm](https://www.npmjs.com/) (Obsidian plugin build)
+- [npm](https://www.npmjs.com/) (only if you test the [Obsidian plugin](https://github.com/rigter/devitri-obsidian-plugin) from its repo)
 
 ---
 
@@ -135,13 +135,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/vaults
 
 ## 5. Obsidian plugin
 
-### Build
-
-```bash
-cd plugin-obsidian
-npm install
-npm run build
-```
+The plugin is maintained in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin). Clone that repo and follow its README for build and install steps.
 
 Outputs `main.js` and uses `manifest.json` (`id`: `devitri-obsidian-plugin`).
 
@@ -154,8 +148,6 @@ Folder name **must** match manifest `id`:
   main.js
   manifest.json
 ```
-
-See [plugin-obsidian/INSTALL.md](./plugin-obsidian/INSTALL.md) and [plugin-obsidian/README.md](./plugin-obsidian/README.md).
 
 ### Configure
 
@@ -218,8 +210,9 @@ Run locally before opening a PR:
 ```bash
 cd backend && go test ./...
 cd frontend && pnpm install && pnpm exec svelte-kit sync && pnpm run check && pnpm run build
-cd plugin-obsidian && npm ci && npm run check && npm run build
 ```
+
+Plugin checks: see [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).
 
 ### Continuous integration
 
@@ -229,10 +222,9 @@ GitHub Actions workflow [`.github/workflows/ci.yml`](./.github/workflows/ci.yml)
 |-----|---------|
 | Backend | `go test ./...` (CGO enabled for SQLite) |
 | Frontend | `pnpm run check` + `pnpm run build` |
-| Plugin | `npm run check` + `npm run build` |
 
 Ad-hoc Go scripts in `backend/` root use `//go:build ignore` and are excluded from `go test ./...`.
 
 ---
 
-*Last updated: 2026-06-02*
+*Last updated: 2026-06-07*

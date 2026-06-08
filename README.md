@@ -26,12 +26,13 @@ Devitri keeps your notes synchronized across devices using content hashes (SHA-2
 devitri/
 ├── backend/           # Go API + sync engine + SQLite
 ├── frontend/          # SvelteKit static dashboard
-├── plugin-obsidian/   # Obsidian community plugin (TypeScript)
 ├── deploy/            # Docker Compose (dev, Traefik, Caddy)
 ├── FOUNDATION.md      # Product & API specification (source of truth)
 ├── DESIGN.md          # Design system (Nano v1 / Zinc)
 └── AGENTS.md          # Contributor / agent context
 ```
+
+**Obsidian plugin** (separate repo): [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin)
 
 ## Deployment models
 
@@ -86,13 +87,7 @@ npm run check && npm run build
 
 ### Obsidian plugin
 
-```bash
-cd plugin-obsidian
-npm install
-npm run build
-```
-
-Copy `main.js` and `manifest.json` into your vault’s `.obsidian/plugins/devitri-obsidian-plugin/` (folder name must match `manifest.json` `id`). Details: [`plugin-obsidian/README.md`](./plugin-obsidian/README.md).
+The plugin is maintained in [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin). Build and install instructions are in that repository. Copy `main.js` and `manifest.json` into your vault’s `.obsidian/plugins/devitri-obsidian-plugin/` (folder name must match `manifest.json` `id`).
 
 ## Configuration
 
@@ -169,7 +164,7 @@ Use the same **Vault ID** and a fresh **access key** from the dashboard **Connec
 
 ### What file types sync?
 
-The plugin syncs **Markdown** notes (`.md` via Obsidian’s markdown file list). Paths under `.obsidian/` are excluded. Attachments and other extensions are not synced in the current release.
+Via the [Obsidian plugin](https://github.com/Rigter/devitri-obsidian-plugin): **Markdown**, **images**, **attachments**, and other vault files sync bidirectionally. The first sync (or after **Reset Local Sync State**) scans the whole vault, not only `.md` files. Anything under `.obsidian/` is excluded. Details: [plugin README — What syncs](https://github.com/Rigter/devitri-obsidian-plugin#what-syncs).
 
 ### Server manifest is empty but the dashboard lists my vault
 
@@ -177,7 +172,7 @@ The vault row can exist after the first API contact while **no files** have been
 
 ## Contributing
 
-We welcome issues and pull requests. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`AGENTS.md`](./AGENTS.md) before larger changes. API JSON shapes in `FOUNDATION.md` are contractual—update them together with `backend`, `frontend`, and `plugin-obsidian` clients.
+We welcome issues and pull requests. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`AGENTS.md`](./AGENTS.md) before larger changes. API JSON shapes in `FOUNDATION.md` are contractual—update them together with `backend`, `frontend`, and the [Obsidian plugin](https://github.com/rigter/devitri-obsidian-plugin) client.
 
 ## Author
 
