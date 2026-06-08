@@ -78,6 +78,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Devitri</title>
+</svelte:head>
+
 <div class="flex min-h-screen flex-col">
   <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <div class="container mx-auto flex h-14 max-w-7xl items-center px-4 md:px-8">
