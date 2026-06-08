@@ -12,7 +12,7 @@ fonts: [Archivo, IBM Plex Mono]
 
 **Philosophy:** Minimal with purpose, reading first, no decoration.
 
-Nano Zinc is a mathematically neutral achromatic editorial design system for the note-taking ecosystem. It prioritizes long-form Markdown reading and file navigation.
+Nano Zinc is a mathematically neutral achromatic editorial design system built for writers and thinkers. It prioritizes long-form Markdown reading and file navigation.
 
 The interface conveys **operational calm**: maximum visual silence, hierarchy through typography, and color as a signal — never as decoration. The user should forget there is a dashboard and focus on their notes.
 

@@ -113,14 +113,27 @@ Production API **must** be served over **HTTPS**. That is the operator’s respo
 ## Production compose
 
 ```bash
-# Traefik (existing VPS) — default symlink at repo root
-docker compose up -d
+# Bundled Traefik stack (recommended) — real file at repo root
+docker compose up -d --build
+
+# Same stack via deploy path (symlink to root docker-compose.yml)
+docker compose -f deploy/traefik/docker-compose.yml up -d --build
 
 # Caddy greenfield install
 docker compose -f deploy/caddy/docker-compose.yml up -d
+
+# Existing external Traefik (backend + frontend only)
+docker compose -f deploy/traefik-external/docker-compose.yml up -d --build
 ```
 
-Adjust volumes, domains, and TLS in the compose files under `deploy/`.
+Before the bundled Traefik stack, create **files** under `deploy/traefik/` (not directories — see [`deploy/traefik/README.md`](./deploy/traefik/README.md)):
+
+```bash
+cp deploy/traefik/traefik.yml.example deploy/traefik/traefik.yml
+touch deploy/traefik/acme.json && chmod 600 deploy/traefik/acme.json
+```
+
+For an existing VPS Traefik network, prefer `deploy/traefik-external/`.
 
 ## Security
 
