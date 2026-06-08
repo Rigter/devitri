@@ -27,10 +27,6 @@ node_modules/
 .pnpm-store/
 frontend/build/
 frontend/.svelte-kit/
-plugin-obsidian/main.js
-plugin-obsidian/main.js.map
-plugin-obsidian/dist/
-plugin-obsidian/node_modules/
 
 # OS and editor
 .DS_Store
