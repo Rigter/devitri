@@ -186,7 +186,7 @@ Use **Verify** / **Sync Now** in plugin settings. Bulk deletes above thresholds 
 docker compose up -d
 ```
 
-Requires Traefik network and labels configured in `deploy/traefik/docker-compose.yml`. Use your real domain and HTTPS for plugin testing; the plugin should use the **API** base URL (`https://api.example.com`), not the dashboard origin unless they are the same host with `/api` routed.
+Requires Traefik network and labels configured in root `docker-compose.yml` (or the symlink at `deploy/traefik/docker-compose.yml`). Use your real domain and HTTPS for plugin testing; the plugin should use the **API** base URL (`https://api.example.com`), not the dashboard origin unless they are the same host with `/api` routed.
 
 ---
 

@@ -1,0 +1,17 @@
+# Copy to traefik.yml before first run: cp traefik.yml.example traefik.yml
+#
+# The bundled stack in ../../docker-compose.yml passes most options via command.
+# Use this file for static overrides (TLS, ACME, extra entrypoints).
+
+api:
+  dashboard: true
+  insecure: true
+
+# Example — uncomment and set your email for HTTPS with Let's Encrypt:
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: you@example.com
+#       storage: /etc/traefik/acme.json
+#       httpChallenge:
+#         entryPoint: web

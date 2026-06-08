@@ -440,7 +440,7 @@ External services register for events; payloads are HMAC-SHA256 signed. Core sta
 
 ## 10. Reference Deployment
 
-See `deploy/traefik/`, `deploy/caddy/`, and `deploy/dev/` for compose files. Root `docker-compose.yml` may symlink to Traefik production compose.
+See `deploy/caddy/`, `deploy/dev/`, and `deploy/traefik-external/` for alternate compose files. Root `docker-compose.yml` is the bundled Traefik production stack; `deploy/traefik/docker-compose.yml` symlinks to it.
 
 Production checklist:
 
