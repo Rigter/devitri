@@ -1,4 +1,9 @@
-version: '3.8'
+# Devitri — Caddy reverse proxy + backend + frontend (greenfield install).
+# From repository root:
+#   cp .env.example .env
+#   docker compose -f deploy/caddy/docker-compose.yml up -d --build
+#
+# HTTP (:80): default Caddyfile. HTTPS: see Caddyfile.production.example and README.md.
 
 services:
   caddy:
@@ -6,10 +11,16 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      CADDY_EMAIL: ${CADDY_EMAIL:-}
+      DEVITRI_DOMAIN: ${DEVITRI_DOMAIN:-}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./caddy_data:/data
       - ./caddy_config:/config
+    depends_on:
+      backend:
+        condition: service_healthy
     restart: unless-stopped
 
   backend:
@@ -17,8 +28,8 @@ services:
       context: ../../backend
       dockerfile: Dockerfile
     volumes:
-      - ../../data:/app/data
-      - ../../vaults:/app/vaults
+      - ../../data:/data
+      - ../../vaults:/vaults
     env_file:
       - ../../.env
     healthcheck:
@@ -33,6 +44,8 @@ services:
     build:
       context: ../../frontend
       dockerfile: Dockerfile
+      args:
+        VITE_DEVITRI_BACKEND_URL: ${DEVITRI_BACKEND_URL:-}
     depends_on:
       backend:
         condition: service_healthy

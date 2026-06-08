@@ -17,6 +17,8 @@ frontend/.env.*.local
 
 # TLS / proxy secrets (Let's Encrypt, local certs)
 **/acme.json
+deploy/caddy/caddy_data/
+deploy/caddy/caddy_config/
 *.pem
 *.key
 

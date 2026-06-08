@@ -1,12 +1,18 @@
+# Global ACME email (set CADDY_EMAIL in .env or compose environment).
 {
-    email {$EMAIL_ADDRESS}
+	email {$CADDY_EMAIL}
 }
 
+# HTTP-only site block — local / IP testing without a domain.
+# For HTTPS with a real domain, use Caddyfile.production.example instead.
 :80 {
-    handle /api/* {
-        reverse_proxy backend:8080
-    }
-    handle {
-        reverse_proxy frontend:80
-    }
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+	handle /health {
+		reverse_proxy backend:8080
+	}
+	handle {
+		reverse_proxy frontend:80
+	}
 }
