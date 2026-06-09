@@ -60,12 +60,12 @@
   $effect(() => {
     if (serverStatus.isLoading || authStore.isLoading || !serverStatus.checked) return;
 
-    if (!serverStatus.ready) {
-      navigateIfNeeded('/setup');
-      return;
-    }
     if (!authStore.isAuthenticated) {
-      navigateIfNeeded('/login');
+      if (!serverStatus.ready) {
+        navigateIfNeeded('/setup');
+      } else {
+        navigateIfNeeded('/login');
+      }
       return;
     }
 

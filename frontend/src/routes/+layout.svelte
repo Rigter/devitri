@@ -91,7 +91,7 @@
       </div>
       
       <nav class="flex flex-1 items-center space-x-6 text-sm font-medium">
-        {#if serverStatus.ready && authStore.isAuthenticated}
+        {#if authStore.isAuthenticated}
           <a href="/" data-sveltekit-reload class={navClass('/')}>
             <LayoutDashboard size={16} />
             <span>Dashboard</span>
@@ -108,7 +108,7 @@
             <SlidersHorizontal size={16} />
             <span>Settings</span>
           </a>
-        {:else if !serverStatus.isLoading && !serverStatus.ready}
+        {:else if !serverStatus.isLoading && !serverStatus.ready && !authStore.isAuthenticated}
           <a href="/setup" data-sveltekit-reload class={navClass('/setup')}>
             <Settings size={16} />
             <span>Setup</span>
