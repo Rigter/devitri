@@ -40,12 +40,13 @@ func SetupRouter(db *sql.DB, jwtSecret string) *mux.Router {
 
 	// Setup routes (Public)
 	setupRouter := router.PathPrefix("/api/setup").Subrouter()
-	setupRouter.Use(rateLimiter.RateLimit)
 	setupRouter.Use(middleware.SetupGuard)
 	setupRouter.HandleFunc("/check", setupHandler.CheckSetup).Methods("GET")
-	setupRouter.HandleFunc("/generate", setupHandler.GenerateConfig).Methods("POST")
-	setupRouter.HandleFunc("/generate-master-hash", setupHandler.GenerateMasterHash).Methods("POST")
-	setupRouter.HandleFunc("/generate-jwt-secret", setupHandler.GenerateJWTSecret).Methods("POST")
+	setupMutations := setupRouter.NewRoute().Subrouter()
+	setupMutations.Use(rateLimiter.RateLimit)
+	setupMutations.HandleFunc("/generate", setupHandler.GenerateConfig).Methods("POST")
+	setupMutations.HandleFunc("/generate-master-hash", setupHandler.GenerateMasterHash).Methods("POST")
+	setupMutations.HandleFunc("/generate-jwt-secret", setupHandler.GenerateJWTSecret).Methods("POST")
 	
 	// Public auth routes (with rate limiting)
 	authRouter := router.PathPrefix("/api/auth").Subrouter()
