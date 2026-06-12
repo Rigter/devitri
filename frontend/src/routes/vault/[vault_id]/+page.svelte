@@ -249,12 +249,12 @@
   $effect(() => {
     if (serverStatus.isLoading || authStore.isLoading) return;
 
-    if (!serverStatus.ready) {
-      navigateTo('/setup');
-      return;
-    }
     if (!authStore.isAuthenticated) {
-      navigateTo('/login');
+      if (!serverStatus.ready) {
+        navigateTo('/setup');
+      } else {
+        navigateTo('/login');
+      }
       return;
     }
     if (!vaultId) return;
