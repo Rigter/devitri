@@ -1,6 +1,6 @@
 # Devitri
 
-*Pronunciation:* **DEH-vih-tree** · `/ˈdɛvɪtri/` (from *devitrification*)
+_Pronunciation:_ **DEH-vih-tree** · `/ˈdɛvɪtri/` (from _devitrification_)
 
 [![CI](https://github.com/rigter/devitri/actions/workflows/ci.yml/badge.svg)](https://github.com/rigter/devitri/actions/workflows/ci.yml)
 
@@ -9,6 +9,10 @@
 Devitri keeps your notes synchronized across devices using content hashes (SHA-256) and three-way merge, while giving you a minimal web UI to browse vaults and manage device access. You run the stack; your data stays on your infrastructure.
 
 > Architecture and API contract: [`FOUNDATION.md`](./FOUNDATION.md) · UI: [`DESIGN.md`](./DESIGN.md) · Contributors: [`AGENTS.md`](./AGENTS.md)
+
+![docs/screenshots/devitri-sc1.png](docs/screenshots/devitri-sc1.png)
+
+![docs/screenshots/devitri-sc2.png](docs/screenshots/devitri-sc2.png)
 
 ## Features
 
@@ -36,11 +40,11 @@ devitri/
 
 ## Deployment models
 
-| Model | API | Dashboard | CORS | Typical use |
-|-------|-----|-----------|------|-------------|
-| **A — API only (public)** | HTTPS on VPS | Local (`npm run dev` / preview) | List localhost origins + set `VITE_DEVITRI_BACKEND_URL` | Personal server, max privacy for UI |
-| **B — API + dashboard (public)** | HTTPS | HTTPS (same or other domain) | `DEVITRI_CORS_ORIGINS` = dashboard URL(s) | Family team, browser access anywhere |
-| **C — Local Docker** | `localhost:8080` | `localhost:3000` | Defaults in dev compose | Hacking, integration tests |
+| Model                            | API              | Dashboard                       | CORS                                                    | Typical use                          |
+| -------------------------------- | ---------------- | ------------------------------- | ------------------------------------------------------- | ------------------------------------ |
+| **A — API only (public)**        | HTTPS on VPS     | Local (`npm run dev` / preview) | List localhost origins + set `VITE_DEVITRI_BACKEND_URL` | Personal server, max privacy for UI  |
+| **B — API + dashboard (public)** | HTTPS            | HTTPS (same or other domain)    | `DEVITRI_CORS_ORIGINS` = dashboard URL(s)               | Family team, browser access anywhere |
+| **C — Local Docker**             | `localhost:8080` | `localhost:3000`                | Defaults in dev compose                                 | Hacking, integration tests           |
 
 **Obsidian plugin:** always talks to your API URL with `Authorization: Bearer`. It does **not** use browser CORS; use **HTTPS** for any internet-exposed API.
 
@@ -57,9 +61,9 @@ cp .env.example .env
 docker compose -f deploy/dev/docker-compose.yml up -d --build
 ```
 
-- API: http://localhost:8080  
-- Dashboard (container): http://localhost:3000  
-- Health: http://localhost:8080/health  
+- API: [http://localhost:8080](http://localhost:8080)
+- Dashboard (container): [http://localhost:3000](http://localhost:3000)
+- Health: [http://localhost:8080/health](http://localhost:8080/health)
 
 First-run: until `DEVITRI_MASTER_HASH` and `DEVITRI_JWT_SECRET` are set, only `/api/setup/*` is available. Use the dashboard **Setup** flow or the setup API to generate values, then restart the backend.
 
@@ -91,17 +95,17 @@ The plugin is maintained in [devitri-obsidian-plugin](https://github.com/rigter/
 
 ## Configuration
 
-| File | Purpose |
-|------|---------|
-| [`.env.example`](./.env.example) | Backend secrets, CORS, sync thresholds, proxy trust |
-| [`frontend/.env.example`](./frontend/.env.example) | `VITE_DEVITRI_BACKEND_URL` when API is remote |
+| File                                               | Purpose                                             |
+| -------------------------------------------------- | --------------------------------------------------- |
+| [`.env.example`](./.env.example)                   | Backend secrets, CORS, sync thresholds, proxy trust |
+| [`frontend/.env.example`](./frontend/.env.example) | `VITE_DEVITRI_BACKEND_URL` when API is remote       |
 
 Important variables:
 
-- **`DEVITRI_MASTER_HASH`** / **`DEVITRI_JWT_SECRET`** — required after setup  
-- **`DEVITRI_CORS_ORIGINS`** — browser dashboard origins (comma-separated)  
-- **`DEVITRI_TRUST_PROXY_HEADERS`** — `true` only behind your reverse proxy  
-- **`DEVITRI_ALLOW_INSECURE_JWT`** — local dev only; never in production  
+- **`DEVITRI_MASTER_HASH`** / **`DEVITRI_JWT_SECRET`** — required after setup
+- **`DEVITRI_CORS_ORIGINS`** — browser dashboard origins (comma-separated)
+- **`DEVITRI_TRUST_PROXY_HEADERS`** — `true` only behind your reverse proxy
+- **`DEVITRI_ALLOW_INSECURE_JWT`** — local dev only; never in production
 
 Production API **must** be served over **HTTPS**. That is the operator’s responsibility (Traefik, Caddy, etc. under `deploy/`).
 
