@@ -1,40 +1,30 @@
-# Devitri — bundled Traefik stack (recommended production entry point).
-# Run from repository root: docker compose up -d --build
-# deploy/traefik/docker-compose.yml symlinks here for tools that look under deploy/traefik/.
+# Devitri — generic Docker Compose.
+#
+# Quick start:
+#   cp .env.example .env          # fill in secrets (see .env.example)
+#   docker compose up -d --build
+#
+# Ports 8080 (API) and 3000 (dashboard) are exposed directly.
+# To put a reverse proxy (Traefik, Caddy, Nginx…) in front, remove the
+# `ports:` blocks and add your proxy labels / networks to each service.
+# The backend listens on port 8080 internally; the frontend on port 80.
+#
+# VITE_DEVITRI_BACKEND_URL is baked into the frontend at build time.
+# For local use the default (http://localhost:8080) works as-is.
+# For a public deployment set it to your API's public URL before building:
+#   VITE_DEVITRI_BACKEND_URL=https://api.example.com docker compose up -d --build
 
 services:
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./deploy/traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./deploy/traefik/acme.json:/etc/traefik/acme.json
-    restart: unless-stopped
-
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
     volumes:
-      - ./data:/data
-      - ./vaults:/vaults
-    env_file:
-      - .env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - devitri-data:/data
+      - devitri-vaults:/vaults
+    env_file: .env
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
       interval: 30s
@@ -47,12 +37,15 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+      args:
+        VITE_DEVITRI_BACKEND_URL: ${VITE_DEVITRI_BACKEND_URL:-http://localhost:8080}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
     depends_on:
       backend:
         condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  devitri-data:
+  devitri-vaults:

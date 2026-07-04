@@ -53,7 +53,7 @@ Devitri typically runs as **two containers** (frontend + backend) on a Docker ne
                                Internet / Tailscale
 ```
 
-A reverse proxy (Traefik or Caddy) is the single TLS entry point in production. For development, expose ports directly (`deploy/dev/docker-compose.yml`).
+A reverse proxy (Traefik, Caddy, Nginx…) is the single TLS entry point in production. For development, the default `docker-compose.yml` exposes ports directly.
 
 ### Deployment profiles
 
@@ -440,7 +440,7 @@ External services register for events; payloads are HMAC-SHA256 signed. Core sta
 
 ## 10. Reference Deployment
 
-See `deploy/caddy/`, `deploy/dev/`, and `deploy/traefik-external/` for alternate compose files. Root `docker-compose.yml` is the bundled Traefik production stack; `deploy/traefik/docker-compose.yml` symlinks to it.
+Root `docker-compose.yml` exposes ports 8080 (API) and 3000 (dashboard) directly. To use a reverse proxy, remove the `ports:` blocks and add your proxy labels/networks — the backend listens on `:8080` internally; the frontend on `:80`.
 
 Production checklist:
 
@@ -485,7 +485,6 @@ Security:
 devitri/
 ├── backend/           # Go API + sync + SQLite migrations
 ├── frontend/          # SvelteKit dashboard
-├── deploy/            # Docker variants
 ├── docs/tasks/        # Optional specs (see README there)
 ├── FOUNDATION.md
 ├── DESIGN.md

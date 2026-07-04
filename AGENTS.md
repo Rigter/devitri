@@ -35,7 +35,6 @@ When changing API shapes, update `FOUNDATION.md` and all clients (`frontend/src/
 devitri/
 ├── backend/              # Go — REST API + sync
 ├── frontend/             # SvelteKit static dashboard
-├── deploy/               # docker-compose variants (dev, traefik, caddy)
 ├── FOUNDATION.md
 ├── DESIGN.md
 └── .env.example
@@ -95,7 +94,7 @@ Missing `DEVITRI_MASTER_HASH` or `DEVITRI_JWT_SECRET` → first-run mode: `/api/
 ```bash
 cd backend && go test ./...
 cd frontend && npm run check && npm run build
-docker compose -f deploy/dev/docker-compose.yml up -d
+docker compose up -d
 ```
 
 Plugin build: see [devitri-obsidian-plugin](https://github.com/rigter/devitri-obsidian-plugin).

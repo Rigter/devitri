@@ -32,7 +32,7 @@ From the repository root:
 ```bash
 cp .env.example .env
 mkdir -p data vaults
-docker compose -f deploy/dev/docker-compose.yml up -d --build
+docker compose up -d --build
 ```
 
 | Service | URL |
@@ -44,15 +44,15 @@ docker compose -f deploy/dev/docker-compose.yml up -d --build
 Logs:
 
 ```bash
-docker compose -f deploy/dev/docker-compose.yml logs -f backend
-docker compose -f deploy/dev/docker-compose.yml logs -f frontend
+docker compose logs -f backend
+docker compose logs -f frontend
 ```
 
 Stop / rebuild:
 
 ```bash
-docker compose -f deploy/dev/docker-compose.yml down
-docker compose -f deploy/dev/docker-compose.yml up -d --build
+docker compose down
+docker compose up -d --build
 ```
 
 ---
@@ -66,7 +66,7 @@ Until `DEVITRI_MASTER_HASH` and `DEVITRI_JWT_SECRET` are set in `.env`, protecte
 3. Paste values into `.env` at the repo root.
 4. Restart the backend:
    ```bash
-   docker compose -f deploy/dev/docker-compose.yml restart backend
+   docker compose restart backend
    ```
 5. The UI polls `GET /api/setup/check` until `ready: true`, then redirects to login.
 
@@ -86,7 +86,7 @@ Optional dev-only shortcut (never in production): `DEVITRI_ALLOW_INSECURE_JWT=tr
 
 ```bash
 # Option 1: Docker backend only
-docker compose -f deploy/dev/docker-compose.yml up -d backend
+docker compose up -d backend
 
 # Option 2: native Go
 cd backend
@@ -172,13 +172,13 @@ Use **Verify** / **Sync Now** in plugin settings. Bulk deletes above thresholds 
 
 ---
 
-## 7. Production-like compose (Traefik)
+## 7. Production-like compose (behind a reverse proxy)
 
 ```bash
 docker compose up -d
 ```
 
-Requires Traefik network and labels configured in root `docker-compose.yml` (or the symlink at `deploy/traefik/docker-compose.yml`). Use your real domain and HTTPS for plugin testing; the plugin should use the **API** base URL (`https://api.example.com`), not the dashboard origin unless they are the same host with `/api` routed.
+For proxy testing, remove the `ports:` blocks from `docker-compose.yml` and add your proxy's labels/networks. Use your real domain and HTTPS for plugin testing; the plugin should use the **API** base URL (`https://api.example.com`), not the dashboard origin unless they are the same host with `/api` routed.
 
 ---
 
@@ -193,12 +193,12 @@ Requires Traefik network and labels configured in root `docker-compose.yml` (or 
 | CORS errors in browser | Add exact origin (e.g. `http://localhost:5173`) to `DEVITRI_CORS_ORIGINS` |
 | Plugin not listed | Folder name = `devitri-obsidian-plugin`; enable community plugins |
 
-**Logs (Docker dev stack)**
+**Logs**
 
 ```bash
-docker compose -f deploy/dev/docker-compose.yml logs backend
-docker compose -f deploy/dev/docker-compose.yml logs frontend
-docker compose -f deploy/dev/docker-compose.yml ps
+docker compose logs backend
+docker compose logs frontend
+docker compose ps
 ```
 
 ---

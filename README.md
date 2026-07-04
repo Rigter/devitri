@@ -30,7 +30,6 @@ Devitri keeps your notes synchronized across devices using content hashes (SHA-2
 devitri/
 ├── backend/           # Go API + sync engine + SQLite
 ├── frontend/          # SvelteKit static dashboard
-├── deploy/            # Docker Compose (dev, Traefik, Caddy)
 ├── FOUNDATION.md      # Product & API specification (source of truth)
 ├── DESIGN.md          # Design system (Nano v1 / Zinc)
 └── AGENTS.md          # Contributor / agent context
@@ -50,7 +49,7 @@ devitri/
 
 See [`.env.example`](./.env.example) for copy-paste `DEVITRI_CORS_ORIGINS` values per profile.
 
-## Quick start (Docker, local)
+## Quick start (Docker)
 
 ```bash
 git clone https://github.com/rigter/devitri.git
@@ -58,14 +57,24 @@ cd devitri
 cp .env.example .env
 # Complete first-run: start stack, open setup UI, paste generated secrets into .env, restart
 
-docker compose -f deploy/dev/docker-compose.yml up -d --build
+docker compose up -d --build
 ```
 
 - API: [http://localhost:8080](http://localhost:8080)
-- Dashboard (container): [http://localhost:3000](http://localhost:3000)
+- Dashboard: [http://localhost:3000](http://localhost:3000)
 - Health: [http://localhost:8080/health](http://localhost:8080/health)
 
 First-run: until `DEVITRI_MASTER_HASH` and `DEVITRI_JWT_SECRET` are set, only `/api/setup/*` is available. Use the dashboard **Setup** flow or the setup API to generate values, then restart the backend.
+
+### Behind a reverse proxy
+
+The default compose exposes ports 8080 and 3000 directly. To put Traefik, Caddy, Nginx, or any other proxy in front, remove the `ports:` blocks from `docker-compose.yml` and add your proxy's labels/networks. The backend listens on `:8080` internally; the frontend on `:80`.
+
+For a public deployment, set `VITE_DEVITRI_BACKEND_URL` to your API's public URL before building:
+
+```bash
+VITE_DEVITRI_BACKEND_URL=https://api.example.com docker compose up -d --build
+```
 
 ## Development
 
@@ -107,32 +116,7 @@ Important variables:
 - **`DEVITRI_TRUST_PROXY_HEADERS`** — `true` only behind your reverse proxy
 - **`DEVITRI_ALLOW_INSECURE_JWT`** — local dev only; never in production
 
-Production API **must** be served over **HTTPS**. That is the operator’s responsibility (Traefik, Caddy, etc. under `deploy/`).
-
-## Production compose
-
-```bash
-# Bundled Traefik stack (recommended) — real file at repo root
-docker compose up -d --build
-
-# Same stack via deploy path (symlink to root docker-compose.yml)
-docker compose -f deploy/traefik/docker-compose.yml up -d --build
-
-# Caddy greenfield install
-docker compose -f deploy/caddy/docker-compose.yml up -d
-
-# Existing external Traefik (backend + frontend only)
-docker compose -f deploy/traefik-external/docker-compose.yml up -d --build
-```
-
-Before the bundled Traefik stack, create **files** under `deploy/traefik/` (not directories — see [`deploy/traefik/README.md`](./deploy/traefik/README.md)):
-
-```bash
-cp deploy/traefik/traefik.yml.example deploy/traefik/traefik.yml
-touch deploy/traefik/acme.json && chmod 600 deploy/traefik/acme.json
-```
-
-For an existing VPS Traefik network, prefer `deploy/traefik-external/`.
+Production API **must** be served over **HTTPS**. That is the operator’s responsibility (Traefik, Caddy, Nginx, etc.).
 
 ## Security
 
